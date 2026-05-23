@@ -55,3 +55,36 @@ output = sim.run(qc, repetitions=20)
 
 print("\n--- RESULTS ---")
 print(output)
+## Update: Simulating Quantum Teleportation
+I wanted to try a classic quantum protocol, so I built a 3-qubit circuit to simulate quantum teleportation. The goal is to transfer the state of a message qubit over to Bob's qubit using a pre-shared entangled pair (Alice and Bob).
+
+```python
+import cirq
+
+msg = cirq.GridQubit(0, 0)
+alice = cirq.GridQubit(0, 1)
+bob = cirq.GridQubit(0, 2)
+
+circuit = cirq.Circuit()
+
+# Initialize message state
+circuit.append(cirq.X(msg)) 
+
+# Entangle Alice & Bob
+circuit.append(cirq.H(alice))
+circuit.append(cirq.CNOT(alice, bob))
+
+# Alice's operations
+circuit.append(cirq.CNOT(msg, alice))
+circuit.append(cirq.H(msg))
+circuit.append(cirq.measure(msg, alice, key='alice_measure'))
+
+# Bob's conditional corrections
+circuit.append(cirq.CNOT(alice, bob))
+circuit.append(cirq.CZ(msg, bob))
+
+circuit.append(cirq.measure(bob, key='bob_result'))
+
+sim = cirq.Simulator()
+output = sim.run(circuit, repetitions=15)
+print(output)
