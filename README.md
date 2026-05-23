@@ -26,3 +26,32 @@ simulator = cirq.Simulator()
 result = simulator.run(circuit, repetitions=20)
 print("Simulation Results:")
 print(result)
+
+## Update: Creating Quantum Entanglement (Bell State)
+I wanted to push things further today so I built a 2-qubit circuit to test quantum entanglement using a Bell State. 
+
+Here is the code I wrote and successfully ran:
+```python
+import cirq
+
+q0 = cirq.GridQubit(0, 0)
+q1 = cirq.GridQubit(0, 1)
+
+qc = cirq.Circuit()
+
+# Put q0 into superposition with a Hadamard gate
+qc.append(cirq.H(q0))
+
+# Entangle them using a CNOT gate
+qc.append(cirq.CNOT(q0, q1))
+
+qc.append(cirq.measure(q0, q1, key='bell_state'))
+
+print("Circuit layout:")
+print(qc)
+
+sim = cirq.Simulator()
+output = sim.run(qc, repetitions=20)
+
+print("\n--- RESULTS ---")
+print(output)
