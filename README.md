@@ -88,3 +88,37 @@ circuit.append(cirq.measure(bob, key='bob_result'))
 sim = cirq.Simulator()
 output = sim.run(circuit, repetitions=15)
 print(output)
+
+import cirq
+
+# setting up 2 qubits for a basic bell state
+# using simple line qubits instead of a grid layout for simplicity
+q0 = cirq.LineQubit(0)
+q1 = cirq.LineQubit(1)
+
+# initializing the circuit
+bell_circuit = cirq.Circuit()
+
+# step 1: put q0 into superposition using a hadamard gate
+bell_circuit.append(cirq.H(q0))
+
+# step 2: entangle q0 and q1 using a CNOT gate
+bell_circuit.append(cirq.CNOT(q0, q1))
+
+# step 3: measure both qubits to check the correlation
+bell_circuit.append(cirq.measure(q0, q1, key='result'))
+
+# print circuit to console to make sure gates are in the right order
+print("--- Circuit Diagram ---")
+print(bell_circuit)
+
+# running the local simulator matrix
+sim = cirq.Simulator()
+sim_data = sim.run(bell_circuit, repetitions=80) # 80 runs is plenty to see the distribution
+
+print("\n--- Raw Counts Output ---")
+# printing the raw histogram data
+counts = sim_data.histogram(key='result')
+print(counts)
+
+print("\nQuick check: We should only see states 0 (00) and 3 (11) if they are perfectly entangled.")
