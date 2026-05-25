@@ -122,3 +122,30 @@ counts = sim_data.histogram(key='result')
 print(counts)
 
 print("\nQuick check: We should only see states 0 (00) and 3 (11) if they are perfectly entangled.")
+
+
+
+# -------------------------------------------------------------------------
+# EXPERIMENT 5: 3-Qubit Toffoli Gate (CCNOT Logic)
+# -------------------------------------------------------------------------
+# Setting up three qubits: two controls and one target
+ct1 = cirq.LineQubit(5)
+ct2 = cirq.LineQubit(6)
+tgt = cirq.LineQubit(7)
+circuit5 = cirq.Circuit()
+
+# Intentionally flip both control lines to |1> so the Toffoli triggers
+circuit5.append([cirq.X(ct1), cirq.X(ct2)])
+
+# Apply the Toffoli gate (Controlled-Controlled-X)
+circuit5.append(cirq.TOFFOLI(ct1, ct2, tgt))
+
+# Measure the target to verify it flipped to 1
+circuit5.append(cirq.measure(tgt, key='toffoli_out'))
+
+print("\n--- Circuit 5: Toffoli (CCNOT) Gate ---")
+print(circuit5)
+
+results5 = simulator.run(circuit5, repetitions=60)
+print("Toffoli target state output (should be 1 since both controls are active):")
+print(results5.histogram(key='toffoli_out'))
