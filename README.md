@@ -137,7 +137,7 @@ circuit5 = cirq.Circuit()
 # Intentionally flip both control lines to |1> so the Toffoli triggers
 circuit5.append([cirq.X(ct1), cirq.X(ct2)])
 
-# Apply the Toffoli gate (Controlled-Controlled-X)
+# Apply the Toffoli CNOT gate (Controlled-Controlled-X)
 circuit5.append(cirq.TOFFOLI(ct1, ct2, tgt))
 
 # Measure the target to verify it flipped to 1
